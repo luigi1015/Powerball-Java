@@ -30,7 +30,7 @@ public class PBNum {
 	{//Set Number.
 		if( (newNum < 1) || (newNum > 59) )
 		{//The new number is out of bounds, throw exception.
-			throw IllegalArgumentException;
+			throw new IllegalArgumentException( "setNumber argument, " + newNum + ", should be between 1 and 59 inclusive." );
 		}
 		num = newNum;
 	}
@@ -54,7 +54,7 @@ public class PBNum {
 	{//Set month.
 		if( (newMonth < 1) || (newMonth > 12) )
 		{//The new month is out of bounds, throw exception.
-			throw IllegalArgumentException;
+			throw new IllegalArgumentException( "setMonth argument, " + newMonth + ", should be between 1 and 12 inclusive." );
 		}
 		month = newMonth;
 	}
@@ -68,7 +68,7 @@ public class PBNum {
 	{//Set day of the month.
 		if( (newDay < 1) || (newDay > 31) )
 		{//The new number is out of bounds, throw exception.
-			throw IllegalArgumentException;
+			throw new IllegalArgumentException( "setDay argument, " + newDay + ", should be between 1 and 31 inclusive." );
 		}
 		day = newDay;
 	}
@@ -82,7 +82,7 @@ public class PBNum {
 	{//Set year.
 		if( (newYear < 1) || (newYear > 9999) )
 		{//The new year is out of bounds, throw exception.
-			throw IllegalArgumentException;
+			throw new IllegalArgumentException( "setYear argument, " + newYear + ", should be between 1 and 9999 inclusive." );
 		}
 		year = newYear;
 	}
