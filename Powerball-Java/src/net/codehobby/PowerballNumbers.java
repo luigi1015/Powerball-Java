@@ -14,7 +14,7 @@ public class PowerballNumbers {
 	//CREATE TABLE IF NOT EXISTS AppData( AppName TEXT, AppVersion TEXT, Comment TEXT);
 	
 	private ArrayList<PBNum> pbNumbers;
-	private String defaultDBFileName = "powerball.db";
+	private String defaultDBFilename = "powerball.db";
 
 	public PowerballNumbers()
 	{
@@ -66,6 +66,8 @@ public class PowerballNumbers {
 		SQLiteConnection db = new SQLiteConnection( new File(dbFileName) );
 		//SQLiteStatement st;
 		String sqlStatement;
+		String appVersion = "0.0.0";
+
 		try {
 			db.open( true );//Open the database with the option to allow its creation if it doesn't exist yet.
 			
@@ -111,6 +113,16 @@ public class PowerballNumbers {
 	
 	public void saveToDatabase()
 	{//Saves the database to the default file name indicated by defaultDBFileName variable.
-		saveToDatabase( defaultDBFileName );
+		saveToDatabase( defaultDBFilename );
+	}
+	
+	public void openDatabase( String filename )
+	{//Reads data from database at filename to memory.
+		//TODO: finish this.
+	}
+	
+	public void openDatabase()
+	{//Reads data from database at default filename to memory.
+		openDatabase( defaultDBFilename );
 	}
 }
