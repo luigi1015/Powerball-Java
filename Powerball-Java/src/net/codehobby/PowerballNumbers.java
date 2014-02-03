@@ -15,6 +15,9 @@ public class PowerballNumbers {
 	
 	private ArrayList<PBNum> pbNumbers;
 	private String defaultDBFilename = "powerball.db";
+	private String appVersion = "0.0.0";//Official version of the app.
+	private String appName = "Powerball";
+	private String appComment = "Still writing the code.";
 
 	public PowerballNumbers()
 	{
@@ -63,10 +66,12 @@ public class PowerballNumbers {
 	
 	public void saveToDatabase( String dbFileName )
 	{//Save the data to a SQLite database indicated by file name in dbFileName.
-		SQLiteConnection db = new SQLiteConnection( new File(dbFileName) );
-		//SQLiteStatement st;
+		
+		//TODO: Make this multithreaded so the GUI isn't waiting around for the data to save to the database.
+		
+		SQLiteConnection db = new SQLiteConnection( new File(defaultDBFilename) );
+		SQLiteStatement st;
 		String sqlStatement;
-		String appVersion = "0.0.0";
 
 		try {
 			db.open( true );//Open the database with the option to allow its creation if it doesn't exist yet.
@@ -99,7 +104,18 @@ public class PowerballNumbers {
 				db.exec( sqlStatement );//Now that the statement should be fully created, execute it.
 			}
 			
-			//TODO: add the App info to AppData.
+			st = db.prepare( "INSERT OR IGNORE INTO AppData (AppName, AppVersion, Comment) VALUES (?, ?, ? )" );
+			try
+			{
+				st.bind( 1, appName );
+				st.bind( 2, appVersion );
+				st.bind( 3, appComment );
+				st.step();
+			}
+			finally
+			{
+				st.dispose();
+			}
 		} catch (SQLiteException e) {
 			System.out.println( "Error in saveToDatabase( String dbFileName ): " + e.getMessage() );
 			e.printStackTrace();
@@ -118,7 +134,37 @@ public class PowerballNumbers {
 	
 	public void openDatabase( String filename )
 	{//Reads data from database at filename to memory.
+		//Table Creation SQL Statements:
+		//CREATE TABLE IF NOT EXISTS PowerballNums ( Number INTEGER NOT NULL, Date INTEGER NOT NULL, Type TEXT NOT NULL);
+		//Valid Type values for PowerballNums: "White" for white balls, "PB" for PowerBall balls, "PP" for PowerPlay values.
+		//CREATE TABLE IF NOT EXISTS AppData( AppName TEXT, AppVersion TEXT, Comment TEXT);
+		
+		//TODO: Make this multithreaded so the GUI isn't waiting around for the database to open.
+		
 		//TODO: finish this.
+		SQLiteConnection db = new SQLiteConnection( new File(defaultDBFilename) );
+		SQLiteStatement st;
+		//String sqlStatement;
+		
+		pbNumbers.clear();//Make sure to delete the numbers to avoid duplicates. **Save to the database first to avoid data loss.**
+		
+		try
+		{
+			db.open( true );//Open the database with the option to allow its creation if it doesn't exist yet.
+			
+			st = db.prepare( "SELECT Number, Date, Type FROM PowerballNums;");
+			while( st.step() )
+			{
+				pbNumbers.add( new PBNum( st.columnInt(0), PowerballType.valueOf(st.columnString(2)), st.columnInt(1) ) );
+			}
+		} catch (SQLiteException e) {
+			System.out.println( "Error in openDatabase( String dbFileName ): " + e.getMessage() );
+			e.printStackTrace();
+		}
+		finally
+		{
+			db.dispose();
+		}
 	}
 	
 	public void openDatabase()
