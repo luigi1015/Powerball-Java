@@ -171,4 +171,13 @@ public class PowerballNumbers {
 	{//Reads data from database at default filename to memory.
 		openDatabase( defaultDBFilename );
 	}
+	
+	public void downloadFromWeb()
+	{//Downloads the data from the web to memory.
+		String numbersURL = "http://www.powerball.com/powerball/winnums-text.txt";
+		
+		pbNumbers.clear();//Make sure to delete the numbers to avoid duplicates.
+		
+		//TODO: Finish later.
+	}
 }
