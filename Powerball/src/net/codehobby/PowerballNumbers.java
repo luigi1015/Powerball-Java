@@ -1,7 +1,13 @@
 package net.codehobby;
 
+import java.io.BufferedReader;
 import java.io.File;
+//import java.io.IOException;
+import java.io.InputStreamReader;
+//import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 import com.almworks.sqlite4java.SQLiteConnection;
 import com.almworks.sqlite4java.SQLiteException;
@@ -35,6 +41,11 @@ public class PowerballNumbers {
 	}
 
 	public void add(  int newNum, PowerballType newType, int newDate  )
+	{//Add and construct a Powerball number to the list.
+		pbNumbers.add( new PBNum( newNum, newType, newDate ) );
+	}
+
+	public void add(  int newNum, PowerballType newType, String newDate  )
 	{//Add and construct a Powerball number to the list.
 		pbNumbers.add( new PBNum( newNum, newType, newDate ) );
 	}
@@ -155,7 +166,7 @@ public class PowerballNumbers {
 			st = db.prepare( "SELECT Number, Date, Type FROM PowerballNums;");
 			while( st.step() )
 			{
-				pbNumbers.add( new PBNum( st.columnInt(0), PowerballType.valueOf(st.columnString(2)), st.columnInt(1) ) );
+				add( st.columnInt(0), PowerballType.valueOf(st.columnString(2)), st.columnInt(1) );
 			}
 		} catch (SQLiteException e) {
 			System.out.println( "Error in openDatabase( String dbFileName ): " + e.getMessage() );
@@ -174,10 +185,37 @@ public class PowerballNumbers {
 	
 	public void downloadFromWeb()
 	{//Downloads the data from the web to memory.
-		String numbersURL = "http://www.powerball.com/powerball/winnums-text.txt";
-		
 		pbNumbers.clear();//Make sure to delete the numbers to avoid duplicates.
-		
-		//TODO: Finish later.
+
+		try {
+			URL numbersURL = new URL( "http://www.powerball.com/powerball/winnums-text.txt" );
+			BufferedReader numbersReader = new BufferedReader( new InputStreamReader(numbersURL.openStream()) );
+			String numbersLine, drawDate;
+			StringTokenizer lineTokenizer;
+			
+			while( (numbersLine = numbersReader.readLine()) != null )
+			{//Go through each line and process the,
+				lineTokenizer = new StringTokenizer( numbersLine, "  " );
+				drawDate = lineTokenizer.nextToken();
+				if( !(drawDate.startsWith("Draw")) )
+				{//If it starts with "Draw", it's the first line and shouldn't be processed. If not, process the line.
+					for( int i = 0; i < 5; i++ )
+					{//Go through each of the 5 White Ball numbers.
+						add( Integer.parseInt( lineTokenizer.nextToken() ), PowerballType.White, drawDate );
+					}
+					
+					//Process the PB number.
+					add( Integer.parseInt( lineTokenizer.nextToken() ), PowerballType.Powerball, drawDate );
+					
+					if( lineTokenizer.hasMoreTokens() )
+					{//If there's a Power Play number, process it.
+						add( Integer.parseInt( lineTokenizer.nextToken() ), PowerballType.PowerPlay, drawDate );
+					}
+				}
+			}
+		} catch (Exception e) {
+			System.out.println( "Error in downloadFromWeb(): " + e.getMessage() );
+			e.printStackTrace();
+		}
 	}
 }

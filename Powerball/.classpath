@@ -2,6 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="//corp.ds.fedex.com/us/MEM/GROUPS/WTC/GROUPS/DSS-SLT/Home/586106/Desktop/Programming/Powerball/sqlite4java.jar"/>
+	<classpathentry kind="lib" path="I:/git/Powerball/Powerball/sqlite4java.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

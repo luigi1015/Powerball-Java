@@ -1,6 +1,8 @@
 package net.codehobby;
 
-public class PBNum {
+import java.util.StringTokenizer;
+
+public class PBNum implements Comparable<PBNum> {
 	private int num;//The number drawn.
 	private PowerballType type;//The type of number drawn. See the PowerballTypes enum for a list of types.
 	private int month, day, year;//Date the number was drawn.
@@ -15,6 +17,13 @@ public class PBNum {
 	}
 	
 	public PBNum( int newNum, PowerballType newType, int newDate )
+	{
+		setNumber( newNum );
+		setType( newType );
+		setDate( newDate );
+	}
+	
+	public PBNum( int newNum, PowerballType newType, String newDate )
 	{
 		setNumber( newNum );
 		setType( newType );
@@ -97,6 +106,56 @@ public class PBNum {
 		day = newDate % 100;
 		month = (newDate/100) % 100;
 		year = newDate / 10000;
+	}
+
+	public void setDate( String newDate )
+	{//Sets the month, day and year from a date String in mm/dd/yyyy format.
+		StringTokenizer dateTokenizer = new StringTokenizer( newDate, "/" );
+		setMonth( Integer.parseInt( dateTokenizer.nextToken() ) );
+		setDay( Integer.parseInt( dateTokenizer.nextToken() ) );
+		setYear( Integer.parseInt( dateTokenizer.nextToken() ) );
+	}
+
+	@Override
+	public int compareTo(PBNum o)
+	{
+		int lessThan = -1;
+		int greaterThan = 1;
+		
+		if( getDate() < o.getDate() )
+		{//If this object's date is less than o's date, return less than.
+			return lessThan;
+		}
+		else if( getDate() > o.getDate() )
+		{//If this object's date is more than o's date, return greater than.
+			return greaterThan;
+		}
+		else
+		{//Start comparing the powerball types and numbers themselves.
+			if( getType().ordinal() < o.getType().ordinal() )
+			{//If this object's type is less than o's type, return less than.
+				return lessThan;
+			}
+			else if( getType().ordinal() > o.getType().ordinal() )
+			{//If this object's type is more than o's type, return greater than.
+				return greaterThan;
+			}
+			else
+			{//The rest of the values are equal, so compare the numbers themselves.
+				if( getNumber() < o.getNumber() )
+				{//If this object's number is less than o's number, return less than.
+					return lessThan;
+				}
+				else if( getNumber() > o.getNumber() )
+				{//If this object's number is more than o's number, return greater than.
+					return greaterThan;
+				}
+				else
+				{//All values important to sorting are equal, return 0.
+					return 0;
+				}
+			}
+		}
 	}
 
 }
