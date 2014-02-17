@@ -2,6 +2,8 @@ package net.codehobby;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+//import java.beans.PropertyChangeEvent;
+//import java.beans.PropertyChangeListener;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -15,9 +17,10 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 
-public class PowerballApp extends JFrame implements ActionListener
+public class PowerballApp extends JFrame implements ActionListener//, PropertyChangeListener
 {
 	private static final long serialVersionUID = 893436983339796805L;//Automatically generated serial version ID.
+	
 	private JPanel panel;
 	private DefaultListModel<String> powerballNumListModel;
 	private JList<String> powerballNumList;
@@ -26,9 +29,12 @@ public class PowerballApp extends JFrame implements ActionListener
 	private JMenuBar mainMenuBar;
 	private JMenu fileMenu;
 	private JMenuItem populateMenuItem, exitMenuItem;
+	
+	private PowerballNumbers nums;
 
 	public PowerballApp()
 	{
+		nums = new PowerballNumbers( this );
 		initUI();
 	}
 
@@ -42,8 +48,8 @@ public class PowerballApp extends JFrame implements ActionListener
 		//Set up the list of Powerball numbers.
 		//First set up the list model.
 		powerballNumListModel = new DefaultListModel<String>();
-		powerballNumListModel.addElement( "Test1" );
-		powerballNumListModel.addElement( "Test2" );
+		//powerballNumListModel.addElement( "Test1" );
+		//powerballNumListModel.addElement( "Test2" );
 		//Then set up the JList
 		powerballNumList = new JList<String>( powerballNumListModel );
 		powerballNumList.setSelectedIndex( 0 );
@@ -51,7 +57,7 @@ public class PowerballApp extends JFrame implements ActionListener
 		powerballNumList.setVisibleRowCount( 5 );
 		//Then set up the scroll pane
 		powerballNumScrollPane = new JScrollPane( powerballNumList, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED );
-		powerballNumScrollPane.setBounds( 50, 50, 210, 120);
+		powerballNumScrollPane.setBounds( 50, 50, 270, 120);
 		panel.add( powerballNumScrollPane );
 		//Set up the Populate button.
 		populateButton = new JButton( "Populate from the web" );
@@ -85,14 +91,28 @@ public class PowerballApp extends JFrame implements ActionListener
 		if( e.getActionCommand().equals("Populate") )
 		{
 			//TODO: Finish this.
-			System.out.println( "This is a placeholder for the real Populate code." );
+			//System.out.println( "This is a placeholder for the real Populate code." );
+			nums.downloadFromWeb();
 		}
 	}
+	
+	public void addPowerballLine( String newLine )
+	{
+		powerballNumListModel.addElement( newLine );
+	}
+/*
+	@Override
+	public void propertyChange(PropertyChangeEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+*/
 	
 	public static void main(String[] args) {
 		//The invokeLater puts the application on the Swing Event Queue to make sure all UI updates are concurrency safe.
 		SwingUtilities.invokeLater( new Runnable() {
 			public void run() {
+				//PowerballNumbers nums = new PowerballNumbers();
 				PowerballApp pba = new PowerballApp();
 				pba.setVisible( true );
 			}

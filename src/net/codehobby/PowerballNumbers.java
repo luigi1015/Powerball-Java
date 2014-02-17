@@ -1,5 +1,6 @@
 package net.codehobby;
 
+//import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
 //import java.io.IOException;
@@ -24,10 +25,15 @@ public class PowerballNumbers {
 	private String appVersion = "0.0.0";//Official version of the app.
 	private String appName = "Powerball";
 	private String appComment = "Still writing the code.";
+	
+	//private ArrayList<PropertyChangeListener> listeners;
+	private PowerballApp pba;
 
-	public PowerballNumbers()
+	public PowerballNumbers( PowerballApp newPba )
 	{
 		pbNumbers = new ArrayList<PBNum>();
+		//listeners = new ArrayList<PropertyChangeListener>();
+		pba = newPba;
 	}
 
 	public void add( PBNum newNum )
@@ -38,16 +44,52 @@ public class PowerballNumbers {
 	public void add(  int newNum, PowerballType newType, int newMonth, int newDay, int newYear  )
 	{//Add and construct a Powerball number to the list.
 		pbNumbers.add( new PBNum( newNum, newType, newMonth, newDay, newYear ) );
+		if( newType.compareTo(PowerballType.White) == 0 )
+		{
+			System.out.println( "White ball: " + newMonth + "/" + newDay + "/" + newYear + " num: " + newNum );
+		}
+		else if( newType.compareTo(PowerballType.Powerball) == 0 )
+		{
+			System.out.println( "Powerball: " + newMonth + "/" + newDay + "/" + newYear + " num: " + newNum );
+		}
+		else if( newType.compareTo(PowerballType.PowerPlay) == 0 )
+		{
+			System.out.println( "Power Play: " + newMonth + "/" + newDay + "/" + newYear + " num: " + newNum );
+		}
 	}
 
 	public void add(  int newNum, PowerballType newType, int newDate  )
 	{//Add and construct a Powerball number to the list.
 		pbNumbers.add( new PBNum( newNum, newType, newDate ) );
+		if( newType.compareTo(PowerballType.White) == 0 )
+		{
+			System.out.println( "White ball: " + newDate + " num: " + newNum );
+		}
+		else if( newType.compareTo(PowerballType.Powerball) == 0 )
+		{
+			System.out.println( "Powerball: " + newDate + " num: " + newNum );
+		}
+		else if( newType.compareTo(PowerballType.PowerPlay) == 0 )
+		{
+			System.out.println( "Power Play: " + newDate + " num: " + newNum );
+		}
 	}
 
 	public void add(  int newNum, PowerballType newType, String newDate  )
 	{//Add and construct a Powerball number to the list.
 		pbNumbers.add( new PBNum( newNum, newType, newDate ) );
+		if( newType.compareTo(PowerballType.White) == 0 )
+		{
+			System.out.println( "White ball: " + newDate + " num: " + newNum );
+		}
+		else if( newType.compareTo(PowerballType.Powerball) == 0 )
+		{
+			System.out.println( "Powerball: " + newDate + " num: " + newNum );
+		}
+		else if( newType.compareTo(PowerballType.PowerPlay) == 0 )
+		{
+			System.out.println( "Power Play: " + newDate + " num: " + newNum );
+		}
 	}
 	
 	public void clear()
@@ -185,6 +227,8 @@ public class PowerballNumbers {
 	
 	public void downloadFromWeb()
 	{//Downloads the data from the web to memory.
+		//TODO: add notifyListeners calls for PowerballApp.
+		
 		pbNumbers.clear();//Make sure to delete the numbers to avoid duplicates.
 
 		try {
@@ -194,7 +238,9 @@ public class PowerballNumbers {
 			StringTokenizer lineTokenizer;
 			
 			while( (numbersLine = numbersReader.readLine()) != null )
-			{//Go through each line and process the,
+			{//Go through each line and process them.
+				pba.addPowerballLine( numbersLine );
+				
 				lineTokenizer = new StringTokenizer( numbersLine, "  " );
 				drawDate = lineTokenizer.nextToken();
 				if( !(drawDate.startsWith("Draw")) )
@@ -217,5 +263,29 @@ public class PowerballNumbers {
 			System.out.println( "Error in downloadFromWeb(): " + e.getMessage() );
 			e.printStackTrace();
 		}
+	}
+	/*
+	
+	public void addChangeListener( PropertyChangeListener newListener )
+	{//Add the listner to the list so that the class can notify it.
+		listeners.add( newListener );
+	}
+	
+	private void notifyListeners( Object object, String property, String oldValue, String newValue )
+	{
+		for( PropertyChangeListener listener : listeners )
+		{
+			listener.propertyChange( new PropertyChangeEvent(this, property, oldValue, newValue) );
+		}
+	}
+	*/
+	
+	public ArrayList<String> getDrawings()
+	{//Return an array of strings representing the drawings in the format "mm/dd/yyyy WB1 WB2 WB3 WB4 WB4 PB PP" or "mm/dd/yyyy WB1 WB2 WB3 WB4 WB4 PB".
+		ArrayList<String> drawings = new ArrayList<String>();
+		
+		//TODO: Finish this.
+		
+		return drawings;
 	}
 }
