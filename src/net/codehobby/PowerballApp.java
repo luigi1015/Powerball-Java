@@ -2,8 +2,8 @@ package net.codehobby;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-//import java.beans.PropertyChangeEvent;
-//import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -17,7 +17,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 
-public class PowerballApp extends JFrame implements ActionListener//, PropertyChangeListener
+public class PowerballApp extends JFrame implements ActionListener, PropertyChangeListener
 {
 	private static final long serialVersionUID = 893436983339796805L;//Automatically generated serial version ID.
 	
@@ -32,9 +32,12 @@ public class PowerballApp extends JFrame implements ActionListener//, PropertyCh
 	
 	private PowerballNumbers nums;
 
-	public PowerballApp()
+	public PowerballApp( PowerballNumbers newNums )
 	{
-		nums = new PowerballNumbers( this );
+		newNums.addChangeListener( this );
+		nums = newNums;
+		//nums = new PowerballNumbers();
+		//nums = new PowerballNumbers( this );
 		initUI();
 	}
 
@@ -100,20 +103,24 @@ public class PowerballApp extends JFrame implements ActionListener//, PropertyCh
 	{
 		powerballNumListModel.addElement( newLine );
 	}
-/*
+
 	@Override
-	public void propertyChange(PropertyChangeEvent arg0) {
-		// TODO Auto-generated method stub
+	public void propertyChange(PropertyChangeEvent arg0)
+	{
+		if( ((String)arg0.getPropertyName()).equals("Add Line") )
+		{
+			addPowerballLine( (String)arg0.getNewValue() );
+		}
 		
 	}
-*/
+
 	
 	public static void main(String[] args) {
 		//The invokeLater puts the application on the Swing Event Queue to make sure all UI updates are concurrency safe.
 		SwingUtilities.invokeLater( new Runnable() {
 			public void run() {
-				//PowerballNumbers nums = new PowerballNumbers();
-				PowerballApp pba = new PowerballApp();
+				PowerballNumbers nums = new PowerballNumbers();
+				PowerballApp pba = new PowerballApp( nums );
 				pba.setVisible( true );
 			}
 		});

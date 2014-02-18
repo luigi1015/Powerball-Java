@@ -1,6 +1,7 @@
 package net.codehobby;
 
-//import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
 //import java.io.IOException;
@@ -8,7 +9,10 @@ import java.io.InputStreamReader;
 //import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.TreeSet;
 
 import com.almworks.sqlite4java.SQLiteConnection;
 import com.almworks.sqlite4java.SQLiteException;
@@ -20,30 +24,52 @@ public class PowerballNumbers {
 	//Valid Type values for PowerballNums: "White" for white balls, "PB" for PowerBall balls, "PP" for PowerPlay values.
 	//CREATE TABLE IF NOT EXISTS AppData( AppName TEXT, AppVersion TEXT, Comment TEXT);
 	
-	private ArrayList<PBNum> pbNumbers;
+	private TreeSet<PBNum> pbNumbers;
+	//private ArrayList<PBNum> pbNumbers;
 	private String defaultDBFilename = "powerball.db";
 	private String appVersion = "0.0.0";//Official version of the app.
 	private String appName = "Powerball";
 	private String appComment = "Still writing the code.";
 	
-	//private ArrayList<PropertyChangeListener> listeners;
-	private PowerballApp pba;
-
+	private ArrayList<PropertyChangeListener> listeners;
+	//private PowerballApp pba;
+/*
 	public PowerballNumbers( PowerballApp newPba )
 	{
 		pbNumbers = new ArrayList<PBNum>();
 		//listeners = new ArrayList<PropertyChangeListener>();
 		pba = newPba;
 	}
-
-	public void add( PBNum newNum )
-	{//Add a Powerball number to the list.
-		pbNumbers.add( newNum );
+*/
+	public PowerballNumbers()
+	{
+		pbNumbers = new TreeSet<PBNum>();
+		listeners = new ArrayList<PropertyChangeListener>();
 	}
 
-	public void add(  int newNum, PowerballType newType, int newMonth, int newDay, int newYear  )
-	{//Add and construct a Powerball number to the list.
-		pbNumbers.add( new PBNum( newNum, newType, newMonth, newDay, newYear ) );
+	public boolean add( PBNum newNum )
+	{//Add a Powerball number to the list. Since no duplicates are allowed, won't add a second version of an element. Returns true if the element was added, false if not.
+		return pbNumbers.add( newNum );
+/*
+		if( newNum.getType().compareTo(PowerballType.White) == 0 )
+		{
+			System.out.println( "White ball: " + newNum.getMonth() + "/" + newNum.getDay() + "/" + newNum.getYear() + " num: " + newNum.getNumber() );
+		}
+		else if( newNum.getType().compareTo(PowerballType.Powerball) == 0 )
+		{
+			System.out.println( "Powerball: " + newNum.getMonth() + "/" + newNum.getDay() + "/" + newNum.getYear() + " num: " + newNum.getNumber() );
+		}
+		else if( newNum.getType().compareTo(PowerballType.PowerPlay) == 0 )
+		{
+			System.out.println( "Power Play: " + newNum.getMonth() + "/" + newNum.getDay() + "/" + newNum.getYear() + " num: " + newNum.getNumber() );
+		}
+*/
+	}
+
+	public boolean add(  int newNum, PowerballType newType, int newMonth, int newDay, int newYear  )
+	{//Add and construct a Powerball number to the list. Since no duplicates are allowed, won't add a second version of an element. Returns true if the element was added, false if not.
+		return pbNumbers.add( new PBNum( newNum, newType, newMonth, newDay, newYear ) );
+/*
 		if( newType.compareTo(PowerballType.White) == 0 )
 		{
 			System.out.println( "White ball: " + newMonth + "/" + newDay + "/" + newYear + " num: " + newNum );
@@ -56,11 +82,13 @@ public class PowerballNumbers {
 		{
 			System.out.println( "Power Play: " + newMonth + "/" + newDay + "/" + newYear + " num: " + newNum );
 		}
+*/
 	}
 
-	public void add(  int newNum, PowerballType newType, int newDate  )
-	{//Add and construct a Powerball number to the list.
-		pbNumbers.add( new PBNum( newNum, newType, newDate ) );
+	public boolean add(  int newNum, PowerballType newType, int newDate  )
+	{//Add and construct a Powerball number to the list. Since no duplicates are allowed, won't add a second version of an element. Returns true if the element was added, false if not.
+		return pbNumbers.add( new PBNum( newNum, newType, newDate ) );
+/*
 		if( newType.compareTo(PowerballType.White) == 0 )
 		{
 			System.out.println( "White ball: " + newDate + " num: " + newNum );
@@ -73,11 +101,13 @@ public class PowerballNumbers {
 		{
 			System.out.println( "Power Play: " + newDate + " num: " + newNum );
 		}
+*/
 	}
 
-	public void add(  int newNum, PowerballType newType, String newDate  )
-	{//Add and construct a Powerball number to the list.
-		pbNumbers.add( new PBNum( newNum, newType, newDate ) );
+	public boolean add(  int newNum, PowerballType newType, String newDate  )
+	{//Add and construct a Powerball number to the list. Since no duplicates are allowed, won't add a second version of an element. Returns true if the element was added, false if not.
+		return pbNumbers.add( new PBNum( newNum, newType, newDate ) );
+/*
 		if( newType.compareTo(PowerballType.White) == 0 )
 		{
 			System.out.println( "White ball: " + newDate + " num: " + newNum );
@@ -90,6 +120,7 @@ public class PowerballNumbers {
 		{
 			System.out.println( "Power Play: " + newDate + " num: " + newNum );
 		}
+*/
 	}
 	
 	public void clear()
@@ -239,12 +270,14 @@ public class PowerballNumbers {
 			
 			while( (numbersLine = numbersReader.readLine()) != null )
 			{//Go through each line and process them.
-				pba.addPowerballLine( numbersLine );
-				
 				lineTokenizer = new StringTokenizer( numbersLine, "  " );
 				drawDate = lineTokenizer.nextToken();
 				if( !(drawDate.startsWith("Draw")) )
 				{//If it starts with "Draw", it's the first line and shouldn't be processed. If not, process the line.
+					//pba.addPowerballLine( numbersLine );
+					//System.out.println( numbersLine );
+					notifyListeners( this, "Add Line", "", numbersLine );
+					
 					for( int i = 0; i < 5; i++ )
 					{//Go through each of the 5 White Ball numbers.
 						add( Integer.parseInt( lineTokenizer.nextToken() ), PowerballType.White, drawDate );
@@ -264,7 +297,6 @@ public class PowerballNumbers {
 			e.printStackTrace();
 		}
 	}
-	/*
 	
 	public void addChangeListener( PropertyChangeListener newListener )
 	{//Add the listner to the list so that the class can notify it.
@@ -275,10 +307,9 @@ public class PowerballNumbers {
 	{
 		for( PropertyChangeListener listener : listeners )
 		{
-			listener.propertyChange( new PropertyChangeEvent(this, property, oldValue, newValue) );
+			listener.propertyChange( new PropertyChangeEvent(object, property, oldValue, newValue) );
 		}
 	}
-	*/
 	
 	public ArrayList<String> getDrawings()
 	{//Return an array of strings representing the drawings in the format "mm/dd/yyyy WB1 WB2 WB3 WB4 WB4 PB PP" or "mm/dd/yyyy WB1 WB2 WB3 WB4 WB4 PB".
@@ -287,5 +318,14 @@ public class PowerballNumbers {
 		//TODO: Finish this.
 		
 		return drawings;
+	}
+	
+	public Map<Integer, Integer> getNumberCounts()
+	{//Returns a map of the different numbers (the keys) with their counts (the values).
+		Map<Integer, Integer> numCounts = new HashMap<Integer, Integer>();
+		
+		//TODO: Finish this.
+		
+		return numCounts;
 	}
 }

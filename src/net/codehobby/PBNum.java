@@ -118,36 +118,36 @@ public class PBNum implements Comparable<PBNum> {
 
 	@Override
 	public int compareTo(PBNum o)
-	{
+	{//Returns a negative number (defined by lessThan) if object o is less than this object, 0 if the two are equal, or a positive number (defined by greaterThan) if the object o is greater than this object.
 		int lessThan = -1;
 		int greaterThan = 1;
 		
 		if( getDate() < o.getDate() )
-		{//If this object's date is less than o's date, return less than.
+		{//If this object's date is less than o's date, return the less than value.
 			return lessThan;
 		}
 		else if( getDate() > o.getDate() )
-		{//If this object's date is more than o's date, return greater than.
+		{//If this object's date is more than o's date, return the greater than value.
 			return greaterThan;
 		}
 		else
-		{//Start comparing the powerball types and numbers themselves.
+		{//The dates are equal, so start comparing the powerball types and numbers.
 			if( getType().ordinal() < o.getType().ordinal() )
-			{//If this object's type is less than o's type, return less than.
+			{//If this object's type is less than o's type, return the less than value.
 				return lessThan;
 			}
 			else if( getType().ordinal() > o.getType().ordinal() )
-			{//If this object's type is more than o's type, return greater than.
+			{//If this object's type is more than o's type, return the greater than value.
 				return greaterThan;
 			}
 			else
 			{//The rest of the values are equal, so compare the numbers themselves.
 				if( getNumber() < o.getNumber() )
-				{//If this object's number is less than o's number, return less than.
+				{//If this object's number is less than o's number, return the less than value.
 					return lessThan;
 				}
 				else if( getNumber() > o.getNumber() )
-				{//If this object's number is more than o's number, return greater than.
+				{//If this object's number is more than o's number, return the greater than value.
 					return greaterThan;
 				}
 				else
