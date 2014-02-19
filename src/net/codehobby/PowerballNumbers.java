@@ -8,7 +8,9 @@ import java.io.File;
 import java.io.InputStreamReader;
 //import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -258,9 +260,11 @@ public class PowerballNumbers {
 	
 	public void downloadFromWeb()
 	{//Downloads the data from the web to memory.
-		//TODO: add notifyListeners calls for PowerballApp.
+		Calendar currentTime = Calendar.getInstance();
+		SimpleDateFormat currentTimeFormatting = new SimpleDateFormat( "HH:mm:ss" );
 		
 		pbNumbers.clear();//Make sure to delete the numbers to avoid duplicates.
+		notifyListeners( this, "Clear GUI", "", "" );//Clear the GUI.
 
 		try {
 			URL numbersURL = new URL( "http://www.powerball.com/powerball/winnums-text.txt" );
@@ -292,9 +296,14 @@ public class PowerballNumbers {
 					}
 				}
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			System.out.println( "Error in downloadFromWeb(): " + e.getMessage() );
 			e.printStackTrace();
+		}
+		finally
+		{
+			System.out.println( "Finished downloading from web. " + currentTimeFormatting.format(currentTime.getTime()) );
 		}
 	}
 	
@@ -320,11 +329,27 @@ public class PowerballNumbers {
 		return drawings;
 	}
 	
-	public Map<Integer, Integer> getNumberCounts()
+	public Map<Integer, Integer> getNumberCounts( PowerballType type )
 	{//Returns a map of the different numbers (the keys) with their counts (the values).
 		Map<Integer, Integer> numCounts = new HashMap<Integer, Integer>();
 		
-		//TODO: Finish this.
+		//TODO: Finish this. Make it so that it'll return a sorted list.
+		//May want to use an array or List of NumCountPair's and sort it at the end of the count.
+		
+		for( PBNum num : pbNumbers )
+		{//Go through each of the Powerball numbers and add them to counts.
+			if( num.getType().compareTo(type) == 0 )
+			{//Only count the type specified in the method argument.
+				if( numCounts.containsKey(num.getNumberInteger()) )
+				{//There is already a record established, increment it.
+					numCounts.put( num.getNumberInteger(), numCounts.get(num.getNumberInteger())+1 );
+				}
+				else
+				{//There isn't a record already, set it to initial value of 1.
+					numCounts.put( num.getNumberInteger(), 1 );
+				}
+			}
+		}
 		
 		return numCounts;
 	}

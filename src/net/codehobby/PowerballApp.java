@@ -4,6 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -26,6 +29,7 @@ public class PowerballApp extends JFrame implements ActionListener, PropertyChan
 	private JList<String> powerballNumList;
 	private JScrollPane powerballNumScrollPane;
 	private JButton populateButton;
+	private JButton getCountsButton;
 	private JMenuBar mainMenuBar;
 	private JMenu fileMenu;
 	private JMenuItem populateMenuItem, exitMenuItem;
@@ -68,6 +72,12 @@ public class PowerballApp extends JFrame implements ActionListener, PropertyChan
 		populateButton.addActionListener( this );
 		populateButton.setBounds( 50, 180, 210, 30 );
 		panel.add( populateButton );
+		//Set up the Counts button.
+		getCountsButton = new JButton( "Calculate the number of occurences" );
+		getCountsButton.setActionCommand( "Get Counts" );
+		getCountsButton.addActionListener( this );
+		getCountsButton.setBounds( 50, 230, 310, 30 );
+		panel.add( getCountsButton );
 		
 		//Set up the file menu.
 		mainMenuBar = new JMenuBar();
@@ -93,15 +103,38 @@ public class PowerballApp extends JFrame implements ActionListener, PropertyChan
 	{
 		if( e.getActionCommand().equals("Populate") )
 		{
-			//TODO: Finish this.
 			//System.out.println( "This is a placeholder for the real Populate code." );
 			nums.downloadFromWeb();
+		}
+		if( e.getActionCommand().equals("Get Counts") )
+		{
+			//System.out.println( "This is a placeholder for the real Get Counts code." );
+			//Map<Integer, Integer> counts;
+			//counts = nums.getNumberCounts();
+			
+			clear();
+			
+			//TODO: Add functionality for the other types.
+
+			//Go through the counts of the White Ball numbers one by one and put them in the list.
+			Iterator<Entry<Integer, Integer>> countIterator = nums.getNumberCounts(PowerballType.White).entrySet().iterator();
+			while( countIterator.hasNext() )
+			{
+				Map.Entry<Integer, Integer> countEntry = countIterator.next(); 
+				System.out.println( countEntry.getKey() + ": " + countEntry.getValue() );
+				addPowerballLine( countEntry.getKey() + ": " + countEntry.getValue() );
+			}
 		}
 	}
 	
 	public void addPowerballLine( String newLine )
-	{
+	{//Adds a line to the list.
 		powerballNumListModel.addElement( newLine );
+	}
+	
+	public void clear()
+	{//Clears the list.
+		powerballNumListModel.clear();
 	}
 
 	@Override
@@ -110,6 +143,11 @@ public class PowerballApp extends JFrame implements ActionListener, PropertyChan
 		if( ((String)arg0.getPropertyName()).equals("Add Line") )
 		{
 			addPowerballLine( (String)arg0.getNewValue() );
+		}
+		else if( ((String)arg0.getPropertyName()).equals("Clear GUI") )
+		{
+			System.out.println( "Got clear message." );
+			clear();
 		}
 		
 	}

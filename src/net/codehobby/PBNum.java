@@ -35,6 +35,11 @@ public class PBNum implements Comparable<PBNum> {
 		return num;
 	}
 
+	public Integer getNumberInteger()
+	{//Returns number.
+		return new Integer( num );
+	}
+
 	public void setNumber( int newNum )
 	{//Set Number.
 		if( (newNum < 1) || (newNum > 59) )
@@ -59,6 +64,11 @@ public class PBNum implements Comparable<PBNum> {
 		return month;
 	}
 
+	public Integer getMonthInteger()
+	{//Returns month.
+		return new Integer( month );
+	}
+
 	public void setMonth( int newMonth )
 	{//Set month.
 		if( (newMonth < 1) || (newMonth > 12) )
@@ -71,6 +81,11 @@ public class PBNum implements Comparable<PBNum> {
 	public int getDay()
 	{//Returns day of the month.
 		return day;
+	}
+
+	public Integer getDayInteger()
+	{//Returns day of the month.
+		return new Integer( day );
 	}
 
 	public void setDay( int newDay )
@@ -87,6 +102,11 @@ public class PBNum implements Comparable<PBNum> {
 		return year;
 	}
 
+	public Integer getYearInteger()
+	{//Returns year.
+		return new Integer( year );
+	}
+
 	public void setYear( int newYear )
 	{//Set year.
 		if( (newYear < 1) || (newYear > 9999) )
@@ -99,6 +119,11 @@ public class PBNum implements Comparable<PBNum> {
 	public int getDate()
 	{//Returns date in yyyymmdd format.
 		return (year*10000) + month*100 + day;
+	}
+
+	public Integer getDateInteger()
+	{//Returns date in yyyymmdd format.
+		return new Integer( (year*10000) + month*100 + day );
 	}
 
 	public void setDate( int newDate )
@@ -118,7 +143,7 @@ public class PBNum implements Comparable<PBNum> {
 
 	@Override
 	public int compareTo(PBNum o)
-	{//Returns a negative number (defined by lessThan) if object o is less than this object, 0 if the two are equal, or a positive number (defined by greaterThan) if the object o is greater than this object.
+	{//Returns a negative number (defined by lessThan) if this object is less than object o, 0 if the two are equal, or a positive number (defined by greaterThan) if this object is greater than object o.
 		int lessThan = -1;
 		int greaterThan = 1;
 		
