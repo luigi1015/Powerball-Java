@@ -59,5 +59,15 @@ public class NumCountPair implements Comparable<NumCountPair>
 	{
 		count = newCount;
 	}
+	
+	public void addToCount( int additionalValue )
+	{
+		count += additionalValue;
+	}
+	
+	public String toString()
+	{
+		return num + ": " + count;
+	}
 
 }

@@ -11,8 +11,10 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collections;
+import java.util.Comparator;
+//import java.util.HashMap;
+//import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
@@ -32,6 +34,11 @@ public class PowerballNumbers {
 	private String appVersion = "0.0.0";//Official version of the app.
 	private String appName = "Powerball";
 	private String appComment = "Still writing the code.";
+	
+	//Generic Powerball Number stats.
+	private int maxWhiteBall = 59;
+	private int maxPowerBall = 42;
+	private int maxPowerPlay = 10;
 	
 	private ArrayList<PropertyChangeListener> listeners;
 	//private PowerballApp pba;
@@ -329,8 +336,67 @@ public class PowerballNumbers {
 		return drawings;
 	}
 	
-	public Map<Integer, Integer> getNumberCounts( PowerballType type )
+	public ArrayList<NumCountPair> getNumberCounts( PowerballType type )
 	{//Returns a map of the different numbers (the keys) with their counts (the values).
+/*
+		private int maxWhiteBall = 59;
+		private int maxPowerBall = 59;
+		private int maxPowerPlay = 10;
+*/
+		ArrayList<NumCountPair> numCounts;
+		Comparator<NumCountPair> comp = new Comparator<NumCountPair>()
+				{//Define a comparator that returns the opposite of NumCountPair's compareTo so that i'll order the elements in descending order rather than ascending.
+					public int compare( NumCountPair num1, NumCountPair num2 )
+					{
+						return ( -1 * num1.compareTo(num2) );
+					}
+				};
+		
+		//Initialize the ArrayList to the appropriate size.
+		if( type.compareTo(PowerballType.Powerball) == 0 )
+		{//Initialize for Powerball.
+			numCounts = new ArrayList<NumCountPair>( maxPowerBall );
+			
+			//Go through and add the initial values for numCounts.
+			for( int i = 0; i < maxPowerBall; i++ )
+			{
+				numCounts.add( new NumCountPair(i+1, 0) );
+			}
+		}
+		else if( type.compareTo(PowerballType.White) == 0 )
+		{//Initialize for White balls.
+			numCounts = new ArrayList<NumCountPair>( maxWhiteBall );
+			
+			//Go through and add the initial values for numCounts.
+			for( int i = 0; i < maxWhiteBall; i++ )
+			{
+				numCounts.add( new NumCountPair(i+1, 0) );
+			}
+		}
+		else
+		{//Power Play is the only other option, so initialize for that.
+			numCounts = new ArrayList<NumCountPair>( maxPowerPlay );
+			
+			//Go through and add the initial values for numCounts.
+			for( int i = 0; i < maxPowerPlay; i++ )
+			{
+				numCounts.add( new NumCountPair(i+1, 0) );
+			}
+		}
+		
+		for( PBNum num : pbNumbers )
+		{//Go through each of the Powerball numbers and add them to counts.
+			if( num.getType().compareTo(type) == 0 )
+			{//Only count the type specified in the method argument.
+				numCounts.get( num.getNumber()-1 ).addToCount( 1 );
+			}
+		}
+		
+		//Sort the list.
+		Collections.sort( numCounts,  comp );
+		
+		return numCounts;
+/*
 		Map<Integer, Integer> numCounts = new HashMap<Integer, Integer>();
 		
 		//TODO: Finish this. Make it so that it'll return a sorted list.
@@ -352,5 +418,6 @@ public class PowerballNumbers {
 		}
 		
 		return numCounts;
+*/
 	}
 }

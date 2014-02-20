@@ -4,9 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
+//import java.util.Iterator;
+//import java.util.Map;
+//import java.util.Map.Entry;
+
+import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -29,7 +31,8 @@ public class PowerballApp extends JFrame implements ActionListener, PropertyChan
 	private JList<String> powerballNumList;
 	private JScrollPane powerballNumScrollPane;
 	private JButton populateButton;
-	private JButton getCountsButton;
+	private JButton getWhiteBallCountsButton;
+	private JButton getPowerBallCountsButton;
 	private JMenuBar mainMenuBar;
 	private JMenu fileMenu;
 	private JMenuItem populateMenuItem, exitMenuItem;
@@ -72,12 +75,17 @@ public class PowerballApp extends JFrame implements ActionListener, PropertyChan
 		populateButton.addActionListener( this );
 		populateButton.setBounds( 50, 180, 210, 30 );
 		panel.add( populateButton );
-		//Set up the Counts button.
-		getCountsButton = new JButton( "Calculate the number of occurences" );
-		getCountsButton.setActionCommand( "Get Counts" );
-		getCountsButton.addActionListener( this );
-		getCountsButton.setBounds( 50, 230, 310, 30 );
-		panel.add( getCountsButton );
+		//Set up the Counts buttons.
+		getWhiteBallCountsButton = new JButton( "Calculate the number of White Ball occurences" );
+		getWhiteBallCountsButton.setActionCommand( "Get White Ball Counts" );
+		getWhiteBallCountsButton.addActionListener( this );
+		getWhiteBallCountsButton.setBounds( 50, 230, 360, 30 );
+		panel.add( getWhiteBallCountsButton );
+		getPowerBallCountsButton = new JButton( "Calculate the number of Powerball occurences" );
+		getPowerBallCountsButton.setActionCommand( "Get Powerball Counts" );
+		getPowerBallCountsButton.addActionListener( this );
+		getPowerBallCountsButton.setBounds( 50, 280, 360, 30 );
+		panel.add( getPowerBallCountsButton );
 		
 		//Set up the file menu.
 		mainMenuBar = new JMenuBar();
@@ -106,7 +114,7 @@ public class PowerballApp extends JFrame implements ActionListener, PropertyChan
 			//System.out.println( "This is a placeholder for the real Populate code." );
 			nums.downloadFromWeb();
 		}
-		if( e.getActionCommand().equals("Get Counts") )
+		if( e.getActionCommand().equals("Get White Ball Counts") )
 		{
 			//System.out.println( "This is a placeholder for the real Get Counts code." );
 			//Map<Integer, Integer> counts;
@@ -117,6 +125,13 @@ public class PowerballApp extends JFrame implements ActionListener, PropertyChan
 			//TODO: Add functionality for the other types.
 
 			//Go through the counts of the White Ball numbers one by one and put them in the list.
+			ArrayList<NumCountPair> numCounts = nums.getNumberCounts( PowerballType.White );
+			for( NumCountPair num : numCounts )
+			{
+				System.out.println( num );
+				addPowerballLine( num.toString() );
+			}
+			/*
 			Iterator<Entry<Integer, Integer>> countIterator = nums.getNumberCounts(PowerballType.White).entrySet().iterator();
 			while( countIterator.hasNext() )
 			{
@@ -124,6 +139,28 @@ public class PowerballApp extends JFrame implements ActionListener, PropertyChan
 				System.out.println( countEntry.getKey() + ": " + countEntry.getValue() );
 				addPowerballLine( countEntry.getKey() + ": " + countEntry.getValue() );
 			}
+			*/
+		}
+		if( e.getActionCommand().equals("Get Powerball Counts") )
+		{
+			clear();
+
+			//Go through the counts of the Powerball numbers one by one and put them in the list.
+			ArrayList<NumCountPair> numCounts = nums.getNumberCounts( PowerballType.Powerball );
+			for( NumCountPair num : numCounts )
+			{
+				System.out.println( num );
+				addPowerballLine( num.toString() );
+			}
+			/*
+			Iterator<Entry<Integer, Integer>> countIterator = nums.getNumberCounts(PowerballType.White).entrySet().iterator();
+			while( countIterator.hasNext() )
+			{
+				Map.Entry<Integer, Integer> countEntry = countIterator.next(); 
+				System.out.println( countEntry.getKey() + ": " + countEntry.getValue() );
+				addPowerballLine( countEntry.getKey() + ": " + countEntry.getValue() );
+			}
+			*/
 		}
 	}
 	
