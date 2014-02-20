@@ -34,8 +34,10 @@ public class PowerballApp extends JFrame implements ActionListener, PropertyChan
 	private JButton getWhiteBallCountsButton;
 	private JButton getPowerBallCountsButton;
 	private JMenuBar mainMenuBar;
-	private JMenu fileMenu;
+	private JMenu fileMenu, countsMenu;
 	private JMenuItem populateMenuItem, exitMenuItem;
+	private JMenuItem whiteBallCountsMenuItem, powerballCountsMenuItem;
+	private JMenuItem saveToDiskMenuItem, loadFromDiskMenuItem; 
 	
 	private PowerballNumbers nums;
 
@@ -92,12 +94,40 @@ public class PowerballApp extends JFrame implements ActionListener, PropertyChan
 		//File menu
 		fileMenu = new JMenu( "File" );
 		mainMenuBar.add( fileMenu );
-		populateMenuItem = new JMenuItem( "Popuate" );
+		populateMenuItem = new JMenuItem( "Populate" );
 		populateMenuItem.getAccessibleContext().setAccessibleDescription( "Populate the numbers from the Web." );
+		populateMenuItem.setActionCommand( "Populate" );
+		populateMenuItem.addActionListener( this );
 		fileMenu.add( populateMenuItem );
+		fileMenu.addSeparator();
+		countsMenu = new JMenu( "Counts" );
+		whiteBallCountsMenuItem = new JMenuItem( "Count White Balls" );
+		whiteBallCountsMenuItem.getAccessibleContext().setAccessibleDescription( "Count the number of times each White Ball has been drawn and display a sorted list of the counts." );
+		whiteBallCountsMenuItem.setActionCommand( "Get White Ball Counts" );
+		whiteBallCountsMenuItem.addActionListener( this );
+		countsMenu.add( whiteBallCountsMenuItem );
+		powerballCountsMenuItem = new JMenuItem( "Count Powerballs" );
+		powerballCountsMenuItem.getAccessibleContext().setAccessibleDescription( "Count the number of times each Powerball has been drawn and display a sorted list of the counts." );
+		powerballCountsMenuItem.setActionCommand( "Get Powerball Counts" );
+		powerballCountsMenuItem.addActionListener( this );
+		countsMenu.add( powerballCountsMenuItem );
+		fileMenu.add( countsMenu );
+		fileMenu.addSeparator();
+		loadFromDiskMenuItem = new JMenuItem( "Open" );
+		loadFromDiskMenuItem.getAccessibleContext().setAccessibleDescription( "Open from the hard drive." );
+		loadFromDiskMenuItem.setActionCommand( "Open File" );
+		loadFromDiskMenuItem.addActionListener( this );
+		fileMenu.add( loadFromDiskMenuItem );
+		saveToDiskMenuItem = new JMenuItem( "Save" );
+		saveToDiskMenuItem.getAccessibleContext().setAccessibleDescription( "Save to the hard drive." );
+		saveToDiskMenuItem.setActionCommand( "Save File" );
+		saveToDiskMenuItem.addActionListener( this );
+		fileMenu.add( saveToDiskMenuItem );
 		fileMenu.addSeparator();
 		exitMenuItem = new JMenuItem( "Exit" );
 		exitMenuItem.getAccessibleContext().setAccessibleDescription( "Exit the program." );
+		exitMenuItem.setActionCommand( "Exit" );
+		exitMenuItem.addActionListener( this );
 		fileMenu.add( exitMenuItem );
 		setJMenuBar(mainMenuBar);
 
@@ -114,7 +144,7 @@ public class PowerballApp extends JFrame implements ActionListener, PropertyChan
 			//System.out.println( "This is a placeholder for the real Populate code." );
 			nums.downloadFromWeb();
 		}
-		if( e.getActionCommand().equals("Get White Ball Counts") )
+		else if( e.getActionCommand().equals("Get White Ball Counts") )
 		{
 			//System.out.println( "This is a placeholder for the real Get Counts code." );
 			//Map<Integer, Integer> counts;
@@ -141,7 +171,7 @@ public class PowerballApp extends JFrame implements ActionListener, PropertyChan
 			}
 			*/
 		}
-		if( e.getActionCommand().equals("Get Powerball Counts") )
+		else if( e.getActionCommand().equals("Get Powerball Counts") )
 		{
 			clear();
 
@@ -161,6 +191,20 @@ public class PowerballApp extends JFrame implements ActionListener, PropertyChan
 				addPowerballLine( countEntry.getKey() + ": " + countEntry.getValue() );
 			}
 			*/
+		}
+		else if( e.getActionCommand().equals("Open File") )
+		{//Open from the SQLite database.
+			//System.out.println( "This is a placeholder for the Open File command" );
+			nums.openDatabase();
+		}
+		else if( e.getActionCommand().equals("Save File") )
+		{//Save to the SQLite database.
+			//System.out.println( "This is a placeholder for the Save File command" );
+			nums.saveToDatabase();
+		}
+		else if( e.getActionCommand().equals("Exit") )
+		{//Close the program.
+			System.exit( 0 );
 		}
 	}
 	

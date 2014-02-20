@@ -287,7 +287,7 @@ public class PowerballNumbers {
 				{//If it starts with "Draw", it's the first line and shouldn't be processed. If not, process the line.
 					//pba.addPowerballLine( numbersLine );
 					//System.out.println( numbersLine );
-					notifyListeners( this, "Add Line", "", numbersLine );
+					//notifyListeners( this, "Add Line", "", numbersLine );
 					
 					for( int i = 0; i < 5; i++ )
 					{//Go through each of the 5 White Ball numbers.
