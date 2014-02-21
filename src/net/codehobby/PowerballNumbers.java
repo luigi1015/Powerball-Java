@@ -2,27 +2,30 @@ package net.codehobby;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.BufferedReader;
+//import java.io.BufferedReader;
 import java.io.File;
 //import java.io.IOException;
-import java.io.InputStreamReader;
+//import java.io.InputStreamReader;
 //import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.SimpleDateFormat;
+//import java.net.URL;
+//import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+//import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 //import java.util.HashMap;
 //import java.util.Map;
-import java.util.StringTokenizer;
+//import java.util.StringTokenizer;
 import java.util.TreeSet;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
 
 import com.almworks.sqlite4java.SQLiteConnection;
 import com.almworks.sqlite4java.SQLiteException;
 import com.almworks.sqlite4java.SQLiteStatement;
 
-public class PowerballNumbers {
+public class PowerballNumbers implements PropertyChangeListener {
 	//Table Creation SQL Statements:
 	//CREATE TABLE IF NOT EXISTS PowerballNums ( Number INTEGER NOT NULL, Date INTEGER NOT NULL, Type TEXT NOT NULL);
 	//Valid Type values for PowerballNums: "White" for white balls, "PB" for PowerBall balls, "PP" for PowerPlay values.
@@ -267,12 +270,18 @@ public class PowerballNumbers {
 	
 	public void downloadFromWeb()
 	{//Downloads the data from the web to memory.
-		Calendar currentTime = Calendar.getInstance();
-		SimpleDateFormat currentTimeFormatting = new SimpleDateFormat( "HH:mm:ss" );
+		//Calendar currentTime = Calendar.getInstance();
+		//SimpleDateFormat currentTimeFormatting = new SimpleDateFormat( "HH:mm:ss" );
+		DownloadFromWebTask dfwt = new DownloadFromWebTask( this );
+		FutureTask<String> futureDownloadTask = new FutureTask<String>( dfwt );
+		ExecutorService execTask = Executors.newSingleThreadExecutor();
 		
 		pbNumbers.clear();//Make sure to delete the numbers to avoid duplicates.
-		notifyListeners( this, "Clear GUI", "", "" );//Clear the GUI.
+		notifyListeners( this, "Clear GUI", "", "" );//Clear the GUI so that it'll match pbNumbers.
+		
+		execTask.execute( futureDownloadTask );
 
+		/*
 		try {
 			URL numbersURL = new URL( "http://www.powerball.com/powerball/winnums-text.txt" );
 			BufferedReader numbersReader = new BufferedReader( new InputStreamReader(numbersURL.openStream()) );
@@ -312,6 +321,7 @@ public class PowerballNumbers {
 		{
 			System.out.println( "Finished downloading from web. " + currentTimeFormatting.format(currentTime.getTime()) );
 		}
+		*/
 	}
 	
 	public void addChangeListener( PropertyChangeListener newListener )
@@ -419,5 +429,13 @@ public class PowerballNumbers {
 		
 		return numCounts;
 */
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if( ((String)evt.getPropertyName()).equals("Add Number") )
+		{
+			add( new PBNum((String)evt.getNewValue()) );
+		}
 	}
 }

@@ -29,6 +29,20 @@ public class PBNum implements Comparable<PBNum> {
 		setType( newType );
 		setDate( newDate );
 	}
+	
+	public PBNum( String newInput )
+	{//Takes a string in the format "mm/dd/yyyy type value" and inputs the values using inputString( String newString ).
+		inputString( newInput );
+	}
+	
+	public PBNum()
+	{
+		num = 0;
+		type = PowerballType.White;
+		month = 0;
+		day = 0;
+		year = 0;
+	}
 
 	public int getNumber()
 	{//Returns number.
@@ -181,6 +195,57 @@ public class PBNum implements Comparable<PBNum> {
 				}
 			}
 		}
+	}
+	
+	public String toString()
+	{//Returns the value in the format "mm/dd/yyyy type value".
+		String pbnumString;
+		
+		//Get the date.
+		pbnumString = getMonth() + "/" + getDay() + "/" + getYear() + " ";
+		
+		//Get the type.
+		if( getType().compareTo(PowerballType.Powerball) == 0 )
+		{//Powerball type.
+			pbnumString += "Powerball ";
+		}
+		else if( getType().compareTo(PowerballType.PowerPlay) == 0 )
+		{//Power Play type.
+			pbnumString += "PowerPlay ";
+		}
+		else if( getType().compareTo(PowerballType.White) == 0 )
+		{//White ball type.
+			pbnumString += "White ";
+		}
+		
+		//Get the value.
+		pbnumString += getNumber();
+		
+		return pbnumString;
+	}
+	
+	public void inputString( String newString )
+	{//Takes a string in the format "mm/dd/yyyy type value" and inputs the values.
+		StringTokenizer inputTokenizer = new StringTokenizer( newString, " " );
+		String typeString;
+		
+		setDate( inputTokenizer.nextToken() );
+		
+		typeString = inputTokenizer.nextToken();
+		if( typeString.equals("Powerball") )
+		{
+			setType( PowerballType.Powerball );
+		}
+		else if( typeString.equals("PowerPlay") )
+		{
+			setType( PowerballType.PowerPlay );
+		}
+		else if( typeString.equals("White") )
+		{
+			setType( PowerballType.White );
+		}
+		
+		setNumber( Integer.parseInt(inputTokenizer.nextToken()) );
 	}
 
 }
