@@ -200,7 +200,8 @@ public class PowerballApp extends JFrame implements ActionListener, PropertyChan
 		else if( e.getActionCommand().equals("Save File") )
 		{//Save to the SQLite database.
 			//System.out.println( "This is a placeholder for the Save File command" );
-			nums.saveToDatabase();
+			//nums.saveToDatabase();
+			nums.saveJSONToFile( "" );
 		}
 		else if( e.getActionCommand().equals("Exit") )
 		{//Close the program.

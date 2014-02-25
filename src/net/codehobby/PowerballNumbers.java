@@ -24,6 +24,9 @@ import java.util.concurrent.FutureTask;
 import com.almworks.sqlite4java.SQLiteConnection;
 import com.almworks.sqlite4java.SQLiteException;
 import com.almworks.sqlite4java.SQLiteStatement;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 public class PowerballNumbers implements PropertyChangeListener {
 	//Table Creation SQL Statements:
@@ -429,6 +432,37 @@ public class PowerballNumbers implements PropertyChangeListener {
 		
 		return numCounts;
 */
+	}
+	
+	public void saveJSONToFile( String filename )
+	{
+		//See http://json.org/java/
+		//Also see http://code.google.com/p/google-gson/
+
+		JsonArray jsonNumbers = new JsonArray();
+		
+		for( PBNum num : pbNumbers )
+		{
+			JsonObject newJSONObj = new JsonObject();
+			newJSONObj.addProperty( "Number", num.getNumberInteger() );
+			try {
+				newJSONObj.addProperty( "Type", num.getTypeString() );
+			} catch (Exception e) {
+				System.err.println( "When trying to add the Type property in saveJSONToFile( String filename ), ,got error: " + e.getMessage() );
+				e.printStackTrace();
+			}
+			newJSONObj.addProperty( "Month", num.getMonthInteger() );
+			newJSONObj.addProperty( "Day", num.getDayInteger() );
+			newJSONObj.addProperty( "Year", num.getYearInteger() );
+			
+			jsonNumbers.add( newJSONObj );
+		}
+		
+		//System.out.println( jsonNumbers.toString() );
+		for( JsonElement elmnt : jsonNumbers )
+		{
+			System.out.println( elmnt.toString() );
+		}
 	}
 
 	@Override

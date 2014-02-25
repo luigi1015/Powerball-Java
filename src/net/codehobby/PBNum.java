@@ -68,6 +68,46 @@ public class PBNum implements Comparable<PBNum> {
 		return type;
 	}
 
+	public String getTypeString() throws Exception
+	{//Returns Type.
+		if( getType().compareTo(PowerballType.Powerball) == 0 )
+		{
+			return "Powerball";
+		}
+		else if( getType().compareTo(PowerballType.PowerPlay) == 0 )
+		{
+			return "Power Play";
+		}
+		else if( getType().compareTo(PowerballType.White) == 0 )
+		{
+			return "White";
+		}
+		else
+		{
+			throw new Exception( "PowerballType " + getType() + " isn't valid in getTypeString()." );
+		}
+	}
+
+	public void setTypeString( String newType ) throws Exception
+	{//Returns Type.
+		if( newType.equals("Powerball") )
+		{
+			setType( PowerballType.Powerball );
+		}
+		else if( newType.equals("Power Play") )
+		{
+			setType( PowerballType.PowerPlay );
+		}
+		else if( newType.equals("White") )
+		{
+			setType( PowerballType.White );
+		}
+		else
+		{
+			throw new Exception( "Type " + newType + " for the PowerballType in setTypeString( String newType ) isn't valid." );
+		}
+	}
+
 	public void setType( PowerballType newType )
 	{//Set Type.
 		type = newType;
