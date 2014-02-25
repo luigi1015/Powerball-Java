@@ -440,6 +440,10 @@ public class PowerballNumbers implements PropertyChangeListener {
 		//Also see http://code.google.com/p/google-gson/
 
 		JsonArray jsonNumbers = new JsonArray();
+		SaveToTextFileTask sttft;
+		FutureTask<String> futureDownloadTask;
+		ExecutorService execTask;
+		ArrayList<String> JSONList = new ArrayList<String>();
 		
 		for( PBNum num : pbNumbers )
 		{
@@ -461,8 +465,14 @@ public class PowerballNumbers implements PropertyChangeListener {
 		//System.out.println( jsonNumbers.toString() );
 		for( JsonElement elmnt : jsonNumbers )
 		{
-			System.out.println( elmnt.toString() );
+			//System.out.println( elmnt.toString() );
+			JSONList.add( elmnt.toString() );
 		}
+
+		sttft = new SaveToTextFileTask( filename, JSONList );
+		futureDownloadTask = new FutureTask<String>( sttft );
+		execTask = Executors.newSingleThreadExecutor();
+		execTask.execute( futureDownloadTask );
 	}
 
 	@Override
