@@ -26,10 +26,13 @@ public class SaveToTextFileTask implements Callable<String> {
 	
 	public String call()
 	{
+		File fl;
+		PrintWriter fileOutput = null;
+		
 		try
 		{
-			File fl = new File( filename );
-			PrintWriter fileOutput = new PrintWriter( new FileWriter(fl) );
+			fl = new File( filename );
+			fileOutput = new PrintWriter( new FileWriter(fl) );
 			
 			for( String line : data )
 			{
@@ -40,8 +43,15 @@ public class SaveToTextFileTask implements Callable<String> {
 		}
 		catch( IOException e )
 		{
-			System.err.println( "Error trying to save JSON data for filename \"" + filename + "\": " + e.getMessage() );
+			System.err.println( "Error trying to save text data for filename \"" + filename + "\": " + e.getMessage() );
 			e.printStackTrace();
+		}
+		finally
+		{
+			if( fileOutput != null )
+			{
+				fileOutput.close();
+			}
 		}
 		
 		System.out.println( "Finished Saving the Text data!" );

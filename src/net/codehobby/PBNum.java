@@ -88,7 +88,7 @@ public class PBNum implements Comparable<PBNum> {
 		}
 	}
 
-	public void setTypeString( String newType ) throws Exception
+	public void setType( String newType ) throws Exception
 	{//Returns Type.
 		if( newType.equals("Powerball") )
 		{

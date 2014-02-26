@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JMenu;
@@ -21,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class PowerballApp extends JFrame implements ActionListener, PropertyChangeListener
 {
@@ -195,13 +197,40 @@ public class PowerballApp extends JFrame implements ActionListener, PropertyChan
 		else if( e.getActionCommand().equals("Open File") )
 		{//Open from the SQLite database.
 			//System.out.println( "This is a placeholder for the Open File command" );
-			nums.openDatabase();
+			//nums.openDatabase();
+			int returnState;
+			JFileChooser openDialog = new JFileChooser();
+			FileNameExtensionFilter saveFilter = new FileNameExtensionFilter( "JSON Files", "JSON" );
+			openDialog.setFileFilter( saveFilter );
+			returnState = openDialog.showOpenDialog(getParent());
+			if( returnState == JFileChooser.APPROVE_OPTION )
+			{
+				System.out.println( "Opening file: " + openDialog.getSelectedFile().getAbsolutePath() );
+				nums.openJSONFile( openDialog.getSelectedFile().getAbsolutePath() );
+			}
 		}
 		else if( e.getActionCommand().equals("Save File") )
 		{//Save to the SQLite database.
 			//System.out.println( "This is a placeholder for the Save File command" );
 			//nums.saveToDatabase();
-			nums.saveJSONToFile( "PowerBallNumbers.json" );
+			int returnState;
+			JFileChooser saveDialog = new JFileChooser();
+			FileNameExtensionFilter saveFilter = new FileNameExtensionFilter( "JSON Files", "JSON" );
+			saveDialog.setFileFilter( saveFilter );
+			returnState = saveDialog.showSaveDialog(getParent());
+			if( returnState == JFileChooser.APPROVE_OPTION )
+			{
+				if( saveDialog.getSelectedFile().getAbsolutePath().toLowerCase().endsWith(".json") )
+				{
+					System.out.println( "Saving to file: " + saveDialog.getSelectedFile().getAbsolutePath() );
+					nums.saveJSONToFile( saveDialog.getSelectedFile().getAbsolutePath() );
+				}
+				else
+				{
+					System.out.println( "Saving to file: " + saveDialog.getSelectedFile().getAbsolutePath() + ".json" );
+					nums.saveJSONToFile( saveDialog.getSelectedFile().getAbsolutePath() + ".json" );
+				}
+			}
 		}
 		else if( e.getActionCommand().equals("Exit") )
 		{//Close the program.

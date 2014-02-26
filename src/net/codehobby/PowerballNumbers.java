@@ -27,6 +27,7 @@ import com.almworks.sqlite4java.SQLiteStatement;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
 
 public class PowerballNumbers implements PropertyChangeListener {
 	//Table Creation SQL Statements:
@@ -441,7 +442,7 @@ public class PowerballNumbers implements PropertyChangeListener {
 
 		JsonArray jsonNumbers = new JsonArray();
 		SaveToTextFileTask sttft;
-		FutureTask<String> futureDownloadTask;
+		FutureTask<String> futureSaveTask;
 		ExecutorService execTask;
 		ArrayList<String> JSONList = new ArrayList<String>();
 		
@@ -470,16 +471,35 @@ public class PowerballNumbers implements PropertyChangeListener {
 		}
 
 		sttft = new SaveToTextFileTask( filename, JSONList );
-		futureDownloadTask = new FutureTask<String>( sttft );
+		futureSaveTask = new FutureTask<String>( sttft );
 		execTask = Executors.newSingleThreadExecutor();
-		execTask.execute( futureDownloadTask );
+		execTask.execute( futureSaveTask );
+	}
+	
+	public void openJSONFile( String filename )
+	{
+		//OpenTextFileTask( PropertyChangeListener newListener, String newFilename, String newMessage )
+		OpenTextFileTask otft = new OpenTextFileTask( this, filename, "Add Number" );
+		FutureTask<String> futureOpenTask = new FutureTask<String>( otft );
+		ExecutorService execTask = Executors.newSingleThreadExecutor();
+		execTask.execute( futureOpenTask );
+	}
+	
+	public void addJSONPBNum( String JSONLine )
+	{
+		//JsonReader reader = new JsonReader( JSONLine );
 	}
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if( ((String)evt.getPropertyName()).equals("Add Number") )
 		{
+			System.out.println( "Adding Number: " + (String)evt.getNewValue() );
 			add( new PBNum((String)evt.getNewValue()) );
+		}
+		else if( ((String)evt.getPropertyName()).equals("Add JSON PBNum") )
+		{
+			addJSONPBNum( (String)evt.getNewValue() );
 		}
 	}
 }
