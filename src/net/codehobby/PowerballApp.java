@@ -153,8 +153,6 @@ public class PowerballApp extends JFrame implements ActionListener, PropertyChan
 			//counts = nums.getNumberCounts();
 			
 			clear();
-			
-			//TODO: Add functionality for the other types.
 
 			//Go through the counts of the White Ball numbers one by one and put them in the list.
 			ArrayList<NumCountPair> numCounts = nums.getNumberCounts( PowerballType.White );
@@ -200,13 +198,24 @@ public class PowerballApp extends JFrame implements ActionListener, PropertyChan
 			//nums.openDatabase();
 			int returnState;
 			JFileChooser openDialog = new JFileChooser();
-			FileNameExtensionFilter saveFilter = new FileNameExtensionFilter( "JSON Files", "JSON" );
-			openDialog.setFileFilter( saveFilter );
+			FileNameExtensionFilter saveJsonFilter = new FileNameExtensionFilter( "JSON Files", "JSON" );
+			FileNameExtensionFilter saveXmlFilter = new FileNameExtensionFilter( "XML Files", "XML" );
+			openDialog.setAcceptAllFileFilterUsed( false );
+			openDialog.setFileFilter( saveJsonFilter );
+			openDialog.addChoosableFileFilter( saveXmlFilter );
 			returnState = openDialog.showOpenDialog(getParent());
 			if( returnState == JFileChooser.APPROVE_OPTION )
 			{
-				System.out.println( "Opening file: " + openDialog.getSelectedFile().getAbsolutePath() );
-				nums.openJSONFile( openDialog.getSelectedFile().getAbsolutePath() );
+				if( openDialog.getFileFilter().getDescription().equals("JSON Files") )
+				{
+					System.out.println( "Opening file: " + openDialog.getSelectedFile().getAbsolutePath() );
+					nums.openFile( openDialog.getSelectedFile().getAbsolutePath(), "json" );
+				}
+				else if( openDialog.getFileFilter().getDescription().equals("XML Files") )
+				{
+					System.out.println( "Opening file: " + openDialog.getSelectedFile().getAbsolutePath() );
+					nums.openFile( openDialog.getSelectedFile().getAbsolutePath(), "xml" );
+				}
 			}
 		}
 		else if( e.getActionCommand().equals("Save File") )
@@ -215,20 +224,39 @@ public class PowerballApp extends JFrame implements ActionListener, PropertyChan
 			//nums.saveToDatabase();
 			int returnState;
 			JFileChooser saveDialog = new JFileChooser();
-			FileNameExtensionFilter saveFilter = new FileNameExtensionFilter( "JSON Files", "JSON" );
-			saveDialog.setFileFilter( saveFilter );
+			FileNameExtensionFilter saveJsonFilter = new FileNameExtensionFilter( "JSON Files", "JSON" );
+			FileNameExtensionFilter saveXmlFilter = new FileNameExtensionFilter( "XML Files", "XML" );
+			saveDialog.setAcceptAllFileFilterUsed( false );
+			saveDialog.setFileFilter( saveJsonFilter );
+			saveDialog.addChoosableFileFilter( saveXmlFilter );
 			returnState = saveDialog.showSaveDialog(getParent());
 			if( returnState == JFileChooser.APPROVE_OPTION )
 			{
-				if( saveDialog.getSelectedFile().getAbsolutePath().toLowerCase().endsWith(".json") )
+				if( saveDialog.getFileFilter().getDescription().equals("JSON Files") )
 				{
-					System.out.println( "Saving to file: " + saveDialog.getSelectedFile().getAbsolutePath() );
-					nums.saveJSONToFile( saveDialog.getSelectedFile().getAbsolutePath() );
+					if( saveDialog.getSelectedFile().getAbsolutePath().toLowerCase().endsWith(".json") )
+					{
+						System.out.println( "Saving to file: " + saveDialog.getSelectedFile().getAbsolutePath() );
+						nums.saveToFile( saveDialog.getSelectedFile().getAbsolutePath(), "json" );
+					}
+					else
+					{
+						System.out.println( "Saving to file: " + saveDialog.getSelectedFile().getAbsolutePath() + ".json" );
+						nums.saveToFile( saveDialog.getSelectedFile().getAbsolutePath() + ".json", "json" );
+					}
 				}
-				else
+				else if( saveDialog.getFileFilter().getDescription().equals("XML Files") )
 				{
-					System.out.println( "Saving to file: " + saveDialog.getSelectedFile().getAbsolutePath() + ".json" );
-					nums.saveJSONToFile( saveDialog.getSelectedFile().getAbsolutePath() + ".json" );
+					if( saveDialog.getSelectedFile().getAbsolutePath().toLowerCase().endsWith(".xml") )
+					{
+						System.out.println( "Saving to file: " + saveDialog.getSelectedFile().getAbsolutePath() );
+						nums.saveToFile( saveDialog.getSelectedFile().getAbsolutePath(), "xml" );
+					}
+					else
+					{
+						System.out.println( "Saving to file: " + saveDialog.getSelectedFile().getAbsolutePath() + ".xml" );
+						nums.saveToFile( saveDialog.getSelectedFile().getAbsolutePath() + ".xml", "xml" );
+					}
 				}
 			}
 		}

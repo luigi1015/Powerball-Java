@@ -435,7 +435,7 @@ public class PowerballNumbers implements PropertyChangeListener {
 */
 	}
 	
-	public void saveJSONToFile( String filename )
+	public void saveToFile( String filename, String filetype )
 	{
 		//See http://json.org/java/
 		//Also see http://code.google.com/p/google-gson/
@@ -471,16 +471,16 @@ public class PowerballNumbers implements PropertyChangeListener {
 		}
 */
 		//sttft = new SaveToTextFileTask( filename, JSONList );
-		sttft = new SaveToTextFileTask( filename, pbNumbers );
+		sttft = new SaveToTextFileTask( filename, filetype, pbNumbers );
 		futureSaveTask = new FutureTask<String>( sttft );
 		execTask = Executors.newSingleThreadExecutor();
 		execTask.execute( futureSaveTask );
 	}
 	
-	public void openJSONFile( String filename )
+	public void openFile( String filename, String fileType )
 	{
 		//OpenTextFileTask( PropertyChangeListener newListener, String newFilename, String newMessage )
-		OpenTextFileTask otft = new OpenTextFileTask( this, filename, "Add Number" );
+		OpenTextFileTask otft = new OpenTextFileTask( this, filename, fileType, "Add Number" );
 		FutureTask<String> futureOpenTask = new FutureTask<String>( otft );
 		ExecutorService execTask = Executors.newSingleThreadExecutor();
 		execTask.execute( futureOpenTask );

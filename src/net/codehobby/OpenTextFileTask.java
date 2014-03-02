@@ -17,20 +17,52 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 //import com.google.gson.stream.JsonReader;
 
+
+
+
+
+import java.io.File;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+//import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
 public class OpenTextFileTask implements Callable<String> {
 	
 	private ArrayList<PropertyChangeListener> listeners;
-	private String filename, message;
+	private String filename, fileType, message;
 	
-	public OpenTextFileTask( PropertyChangeListener newListener, String newFilename, String newMessage )
+	public OpenTextFileTask( PropertyChangeListener newListener, String newFilename, String newFileType, String newMessage )
 	{
 		filename = newFilename;
+		fileType = newFileType;
 		message = newMessage;
 		listeners = new ArrayList<PropertyChangeListener>();
 		listeners.add( newListener );
 	}
 	
 	public String call() throws Exception
+	{
+		if( fileType.equals("json") )
+		{
+			openJsonFile();
+		}
+		else if( fileType.equals("xml") )
+		{
+			openXmlFile();
+		}
+		return "done";
+	}
+	
+	private void openJsonFile() throws Exception
 	{
 		//BufferedReader bufferedInput = null;
 		//JsonReader reader = null;
@@ -114,7 +146,50 @@ public class OpenTextFileTask implements Callable<String> {
 			}
 			*/
 		}
-		return "done";
+	}
+	
+	private void openXmlFile()
+	{
+		try {
+			File xmlFile = new File( filename );
+			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			Document xmlDoc = docBuilder.parse( xmlFile );
+			NodeList pbNumbers = xmlDoc.getElementsByTagName( "PowerballNumber" );
+			
+			for( int i = 0; i < pbNumbers.getLength(); i++ )
+			{//Go through the nodes and process them.
+				Node newNode = pbNumbers.item( i );
+				
+				if( newNode.getNodeType() == Node.ELEMENT_NODE )
+				{
+					Element newElement = (Element) newNode;
+					PBNum newNum = new PBNum();
+					
+					newNum.setNumber( Integer.valueOf(newElement.getElementsByTagName("number").item(0).getTextContent()).intValue() );
+					newNum.setType( newElement.getElementsByTagName("type").item(0).getTextContent() );
+					newNum.setMonth( Integer.valueOf(newElement.getElementsByTagName("month").item(0).getTextContent()).intValue() );
+					newNum.setDay( Integer.valueOf(newElement.getElementsByTagName("day").item(0).getTextContent()).intValue() );
+					newNum.setYear( Integer.valueOf(newElement.getElementsByTagName("year").item(0).getTextContent()).intValue() );
+					
+					notifyListeners( this, "Add Number", "", newNum.toString() );
+				}
+			}
+		} catch (ParserConfigurationException e) {
+			System.err.println( "Error trying to open XML file \"" + filename + "\": " + e.getMessage() );
+			e.printStackTrace();
+		} catch (SAXException e) {
+			System.err.println( "Error trying to open XML file \"" + filename + "\": " + e.getMessage() );
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.err.println( "Error trying to open XML file \"" + filename + "\": " + e.getMessage() );
+			e.printStackTrace();
+		} catch (DOMException e) {
+			System.err.println( "Error trying to open XML file \"" + filename + "\": " + e.getMessage() );
+			e.printStackTrace();
+		} catch (Exception e) {
+			System.err.println( "Error trying to open XML file \"" + filename + "\": " + e.getMessage() );
+			e.printStackTrace();
+		}
 	}
 	
 	private void notifyListeners( Object object, String property, String oldValue, String newValue )
