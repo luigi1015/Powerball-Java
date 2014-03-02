@@ -24,10 +24,10 @@ import java.util.concurrent.FutureTask;
 import com.almworks.sqlite4java.SQLiteConnection;
 import com.almworks.sqlite4java.SQLiteException;
 import com.almworks.sqlite4java.SQLiteStatement;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.stream.JsonReader;
+//import com.google.gson.JsonArray;
+//import com.google.gson.JsonElement;
+//import com.google.gson.JsonObject;
+//import com.google.gson.stream.JsonReader;
 
 public class PowerballNumbers implements PropertyChangeListener {
 	//Table Creation SQL Statements:
@@ -440,12 +440,12 @@ public class PowerballNumbers implements PropertyChangeListener {
 		//See http://json.org/java/
 		//Also see http://code.google.com/p/google-gson/
 
-		JsonArray jsonNumbers = new JsonArray();
+		//JsonArray jsonNumbers = new JsonArray();
 		SaveToTextFileTask sttft;
 		FutureTask<String> futureSaveTask;
 		ExecutorService execTask;
-		ArrayList<String> JSONList = new ArrayList<String>();
-		
+		//ArrayList<String> JSONList = new ArrayList<String>();
+/*
 		for( PBNum num : pbNumbers )
 		{
 			JsonObject newJSONObj = new JsonObject();
@@ -469,8 +469,9 @@ public class PowerballNumbers implements PropertyChangeListener {
 			//System.out.println( elmnt.toString() );
 			JSONList.add( elmnt.toString() );
 		}
-
-		sttft = new SaveToTextFileTask( filename, JSONList );
+*/
+		//sttft = new SaveToTextFileTask( filename, JSONList );
+		sttft = new SaveToTextFileTask( filename, pbNumbers );
 		futureSaveTask = new FutureTask<String>( sttft );
 		execTask = Executors.newSingleThreadExecutor();
 		execTask.execute( futureSaveTask );

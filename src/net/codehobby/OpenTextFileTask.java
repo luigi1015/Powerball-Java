@@ -2,20 +2,20 @@ package net.codehobby;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.BufferedReader;
+//import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
+//import java.util.Iterator;
 import java.util.concurrent.Callable;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+//import com.google.gson.JsonArray;
+//import com.google.gson.JsonElement;
+//import com.google.gson.JsonObject;
+//import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
+//import com.google.gson.stream.JsonReader;
 
 public class OpenTextFileTask implements Callable<String> {
 	
@@ -33,8 +33,8 @@ public class OpenTextFileTask implements Callable<String> {
 	public String call() throws Exception
 	{
 		//BufferedReader bufferedInput = null;
-		JsonReader reader = null;
-		String currentLine, jsonName;
+		//JsonReader reader = null;
+		//String currentLine, jsonName;
 		//PBNum newNum = new PBNum();
 		
 		try
@@ -44,7 +44,8 @@ public class OpenTextFileTask implements Callable<String> {
 			
 			for( PBData data : newData )
 			{
-				notifyListeners( this, message, "", data.Month + "/" + data.Day + "/" + data.Year + " " + data.Type + " " + data.Number );
+				//notifyListeners( this, message, "", data.Month + "/" + data.Day + "/" + data.Year + " " + data.Type + " " + data.Number );
+				notifyListeners( this, message, "", data.month + "/" + data.day + "/" + data.year + " " + data.type + " " + data.num );
 			}
 			/*
 			reader = new JsonReader( new FileReader(filename) );
@@ -128,9 +129,19 @@ public class OpenTextFileTask implements Callable<String> {
 
 class PBData
 {
+	int num;
+	String type;
+	int month;
+	int day;
+	int year;
+}
+/*
+class PBData
+{
 	int Number;
 	String Type;
 	int Month;
 	int Day;
 	int Year;
 }
+*/

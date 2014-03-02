@@ -6,16 +6,19 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
+//import java.util.ArrayList;
+import java.util.TreeSet;
 import java.util.concurrent.Callable;
+
+import com.google.gson.Gson;
 
 public class SaveToTextFileTask implements Callable<String> {
 	
 	//private ArrayList<PropertyChangeListener> listeners;
 	private String filename;
-	ArrayList<String> data;
+	TreeSet<PBNum> data;
 	
-	public SaveToTextFileTask( String newFilename, ArrayList<String> newData )
+	public SaveToTextFileTask( String newFilename, TreeSet<PBNum> newData )
 	{
 		//listeners = new ArrayList<PropertyChangeListener>();
 		//listeners.add( newListener );
@@ -28,18 +31,23 @@ public class SaveToTextFileTask implements Callable<String> {
 	{
 		File fl;
 		PrintWriter fileOutput = null;
+		Gson jsonConverter = new Gson();
 		
 		try
 		{
 			fl = new File( filename );
 			fileOutput = new PrintWriter( new FileWriter(fl) );
 			
+			fileOutput.println( jsonConverter.toJson(data) );
+			
+			/*
 			for( String line : data )
 			{
 				fileOutput.println( line );
 			}
+			*/
 			
-			fileOutput.close();
+			//fileOutput.close();
 		}
 		catch( IOException e )
 		{
